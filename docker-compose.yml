@@ -1,0 +1,29 @@
+###############################################################################
+#                          Generated on phpdocker.io                          #
+###############################################################################
+version: '3.1'
+services:
+  webserver:
+    image: 'nginx:latest'
+    working_dir: /monacoreport
+    volumes:
+      - '.:/monacoreport'
+      - './phpdocker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf'
+    ports:
+      - '80:80'
+
+  php-fpm:
+    build: phpdocker/php-fpm
+    working_dir: /application
+    volumes:
+      - '.:/monacoreport'
+      - './phpdocker/php-fpm/php-ini-overrides.ini:/usr/local/etc/php/conf.d/99-overrides.ini'
+      - './phpdocker/php-fpm/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini'
+    environment:
+      - PHP_IDE_CONFIG=serverName=application
+
+  composer:
+    image: composer
+    volumes:
+      - '.:/monacoreport'
+    working_dir: /monacoreport
