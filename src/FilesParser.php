@@ -50,15 +50,17 @@ class FilesParser
         foreach ($logData as $string) {
             $racersAbreviationsMathc = [];
             preg_match('/^.../', $string, $racersAbreviationsMathc);
-            $parsedLog[$i]["racer_abbreviation"] = $racersAbreviationsMathc[0];
-
+            if (isset($racersAbreviationsMathc[0])) {
+                $parsedLog[$i]["racer_abbreviation"] = $racersAbreviationsMathc[0];
+            }
             $dateTimeMathc = [];
             preg_match('/([0-9]{4})-([0-9]{2})-([0-9]{2})_([0-9]{2}):([0-9]{2}):([0-9]{2})\.([0-9]{3})/',
                 $string,
                 $dateTimeMathc
             );
-            $parsedLog[$i]["date_time"] = $dateTimeMathc[0];
-
+            if (isset($dateTimeMathc[0])) {
+                $parsedLog[$i]["date_time"] = $dateTimeMathc[0];
+            }
             $i++;
         }
 

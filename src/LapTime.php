@@ -40,7 +40,7 @@ class LapTime
         $finishTimestamp = $finish->getTimestamp() . '.' . $finish->format('u');
         $resultTimestamp = round($finishTimestamp - $startTimestamp, 3);
         $e = explode(".", $resultTimestamp);
-        $timeResult = gmdate("i:s", $e[0]) . '.' . $e[1];
+        $timeResult = gmdate("H:i:s", $e[0]) . '.' . $e[1];
 
         return $timeResult;
     }

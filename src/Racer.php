@@ -51,10 +51,19 @@ class Racer
 
     public function getLapTime(): string
     {
-        return $this->lapTime;
+        // Подготавливаем правильный вид для отчета
+        $readyLapTimeLength = 11;
+        $readyLapTime = substr($this->lapTime->getLapTime(), 1);
+
+        //Добавляєм тройную точность милисекунд.
+        if (strlen($readyLapTime) < $readyLapTimeLength) {
+            $readyLapTime = $readyLapTime . "0";
+        }
+
+        return $readyLapTime;
     }
 
-    public function setLapTime(string $lapTime): void
+    public function setLapTime(LapTime $lapTime): LapTime
     {
         $this->lapTime = $lapTime;
     }
