@@ -4,7 +4,7 @@ namespace MonacoReport;
 
 use http\Exception\InvalidArgumentException;
 
-class RacersCollection extends CustomIterator implements \Countable
+class RacersCollection extends CustomCollection implements \Countable
 {
     protected $position = 0;
     protected $container = [];

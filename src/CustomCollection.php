@@ -2,7 +2,7 @@
 
 namespace MonacoReport;
 
-class CustomIterator implements \Iterator
+class CustomCollection implements \Iterator
 {
     protected $position = 0;
     protected $container = [];

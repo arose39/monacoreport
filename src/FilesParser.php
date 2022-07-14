@@ -4,16 +4,11 @@ namespace MonacoReport;
 
 class FilesParser
 {
-    private string $startLogPath;
-    private string $endLogPath;
-    private string $abbreviationsPath;
-
-    public function __construct($startLogPath, $endLogPath, $abbrevitionsPath)
-    {
-        $this->startLogPath = $startLogPath;
-        $this->endLogPath = $endLogPath;
-        $this->abbreviationsPath = $abbrevitionsPath;
-    }
+     public function __construct(
+        private string $startLogPath,
+        private string $endLogPath,
+        private string $abbreviationsPath
+    ){}
 
     public function getRacersRaceInfo(): array
     {
@@ -27,12 +22,12 @@ class FilesParser
             $racersRaceInfo[$i]['team'] = $racerInfo['team'];
             $racersRaceInfo[$i]['abbreviation'] = $racerInfo['abbreviation'];
             foreach ($startLog as $racerStartTimeInfo) {
-                if ($racerInfo["abbreviation"] == $racerStartTimeInfo['racer_abbreviation']) {
+                if ($racerInfo["abbreviation"] === $racerStartTimeInfo['racer_abbreviation']) {
                     $racersRaceInfo[$i]['start_date_time'] = $racerStartTimeInfo['date_time'];
                 }
             }
             foreach ($endLog as $racerEndTimeInfo) {
-                if ($racerInfo["abbreviation"] == $racerEndTimeInfo['racer_abbreviation']) {
+                if ($racerInfo["abbreviation"] === $racerEndTimeInfo['racer_abbreviation']) {
                     $racersRaceInfo[$i]['end_date_time'] = $racerEndTimeInfo['date_time'];
                 }
             }
@@ -84,6 +79,7 @@ class FilesParser
         return $racersInfo;
     }
 
+    // Не использовал files_det_content(), так как удобнее считывать построчно, а не целиком
     private function getDataFromFiles(string $path): array
     {
         $fp = fopen($path, 'r');
@@ -95,5 +91,4 @@ class FilesParser
 
         return $data;
     }
-
 }
