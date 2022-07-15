@@ -2,6 +2,8 @@
 
 namespace MonacoReport\Parsers;
 
+use function PHPUnit\Framework\fileExists;
+
 class LogParser
 {
     const DATE_TIME_PATTERN = '/([0-9]{4})-([0-9]{2})-([0-9]{2})_([0-9]{2}):([0-9]{2}):([0-9]{2})\.([0-9]{3})/';
@@ -32,13 +34,17 @@ class LogParser
     // Не использовал files_get_content(), так как удобнее считывать построчно, а не целиком
     private function getDataFromFiles(string $path): array
     {
-        $fp = fopen($path, 'r');
-        $data = [];
-        for ($i = 0; $fileString = fgets($fp); $i++) {
-            $data[$i] = $fileString;
-        }
-        fclose($fp);
+        if (!file_exists($path)) {
+            die("$path file is not exist");
+        } else {
+            $fp = fopen($path, 'r');
+            $data = [];
+            for ($i = 0; $fileString = fgets($fp); $i++) {
+                $data[$i] = $fileString;
+            }
+            fclose($fp);
 
-        return $data;
+            return $data;
+        }
     }
 }
