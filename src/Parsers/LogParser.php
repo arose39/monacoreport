@@ -2,6 +2,7 @@
 
 namespace MonacoReport\Parsers;
 
+use InvalidArgumentException;
 use function PHPUnit\Framework\fileExists;
 
 class LogParser
@@ -35,7 +36,7 @@ class LogParser
     private function getDataFromFiles(string $path): array
     {
         if (!file_exists($path)) {
-            die("$path file is not exist");
+            throw new InvalidArgumentException("$path file is not exist");
         } else {
             $fp = fopen($path, 'r');
             $data = [];
