@@ -179,7 +179,7 @@ class Application implements ResetInterface
             $exitCode = $e->getCode();
             if (is_numeric($exitCode)) {
                 $exitCode = (int) $exitCode;
-                if ($exitCode <= 0) {
+                if (0 === $exitCode) {
                     $exitCode = 1;
                 }
             } else {
@@ -228,7 +228,7 @@ class Application implements ResetInterface
         try {
             // Makes ArgvInput::getFirstArgument() able to distinguish an option from an argument.
             $input->bind($this->getDefinition());
-        } catch (ExceptionInterface) {
+        } catch (ExceptionInterface $e) {
             // Errors must be ignored, full binding/validation happens later when the command is known.
         }
 
@@ -353,18 +353,9 @@ class Application implements ResetInterface
             CompletionInput::TYPE_ARGUMENT_VALUE === $input->getCompletionType()
             && 'command' === $input->getCompletionName()
         ) {
-            $commandNames = [];
-            foreach ($this->all() as $name => $command) {
-                // skip hidden commands and aliased commands as they already get added below
-                if ($command->isHidden() || $command->getName() !== $name) {
-                    continue;
-                }
-                $commandNames[] = $command->getName();
-                foreach ($command->getAliases() as $name) {
-                    $commandNames[] = $name;
-                }
-            }
-            $suggestions->suggestValues(array_filter($commandNames));
+            $suggestions->suggestValues(array_filter(array_map(function (Command $command) {
+                return $command->isHidden() ? null : $command->getName();
+            }, $this->all())));
 
             return;
         }
@@ -567,7 +558,7 @@ class Application implements ResetInterface
     {
         $this->init();
 
-        return isset($this->commands[$name]) || ($this->commandLoader?->has($name) && $this->add($this->commandLoader->get($name)));
+        return isset($this->commands[$name]) || ($this->commandLoader && $this->commandLoader->has($name) && $this->add($this->commandLoader->get($name)));
     }
 
     /**
@@ -962,16 +953,6 @@ class Application implements ResetInterface
                 throw new RuntimeException('Unable to subscribe to signal events. Make sure that the `pcntl` extension is installed and that "pcntl_*" functions are not disabled by your php.ini\'s "disable_functions" directive.');
             }
 
-            if (Terminal::hasSttyAvailable()) {
-                $sttyMode = shell_exec('stty -g');
-
-                foreach ([\SIGINT, \SIGTERM] as $signal) {
-                    $this->signalRegistry->register($signal, static function () use ($sttyMode) {
-                        shell_exec('stty '.$sttyMode);
-                    });
-                }
-            }
-
             if ($this->dispatcher) {
                 foreach ($this->signalsToDispatchEvent as $signal) {
                     $event = new ConsoleSignalEvent($command, $input, $output, $signal);
@@ -1002,7 +983,7 @@ class Application implements ResetInterface
         try {
             $command->mergeApplicationDefinition();
             $input->bind($command->getDefinition());
-        } catch (ExceptionInterface) {
+        } catch (ExceptionInterface $e) {
             // ignore invalid options/arguments for now, to allow the event listeners to customize the InputDefinition
         }
 

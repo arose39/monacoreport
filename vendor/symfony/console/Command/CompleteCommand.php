@@ -11,12 +11,10 @@
 
 namespace Symfony\Component\Console\Command;
 
-use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Completion\CompletionInput;
 use Symfony\Component\Console\Completion\CompletionSuggestions;
 use Symfony\Component\Console\Completion\Output\BashCompletionOutput;
 use Symfony\Component\Console\Completion\Output\CompletionOutputInterface;
-use Symfony\Component\Console\Completion\Output\FishCompletionOutput;
 use Symfony\Component\Console\Exception\CommandNotFoundException;
 use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,17 +26,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @author Wouter de Jong <wouter@wouterj.nl>
  */
-#[AsCommand(name: '|_complete', description: 'Internal command to provide shell completion suggestions')]
 final class CompleteCommand extends Command
 {
-    /**
-     * @deprecated since Symfony 6.1
-     */
     protected static $defaultName = '|_complete';
-
-    /**
-     * @deprecated since Symfony 6.1
-     */
     protected static $defaultDescription = 'Internal command to provide shell completion suggestions';
 
     private $completionOutputs;
@@ -51,10 +41,7 @@ final class CompleteCommand extends Command
     public function __construct(array $completionOutputs = [])
     {
         // must be set before the parent constructor, as the property value is used in configure()
-        $this->completionOutputs = $completionOutputs + [
-            'bash' => BashCompletionOutput::class,
-            'fish' => FishCompletionOutput::class,
-        ];
+        $this->completionOutputs = $completionOutputs + ['bash' => BashCompletionOutput::class];
 
         parent::__construct();
     }
@@ -118,12 +105,11 @@ final class CompleteCommand extends Command
             } elseif (
                 $completionInput->mustSuggestArgumentValuesFor('command')
                 && $command->getName() !== $completionInput->getCompletionValue()
-                && !\in_array($completionInput->getCompletionValue(), $command->getAliases(), true)
             ) {
                 $this->log('  No command found, completing using the Application class.');
 
                 // expand shortcut names ("cache:cl<TAB>") into their full name ("cache:clear")
-                $suggestions->suggestValues(array_filter(array_merge([$command->getName()], $command->getAliases())));
+                $suggestions->suggestValue($command->getName());
             } else {
                 $command->mergeApplicationDefinition();
                 $completionInput->bind($command->getDefinition());
@@ -185,7 +171,7 @@ final class CompleteCommand extends Command
 
         try {
             $completionInput->bind($this->getApplication()->getDefinition());
-        } catch (ExceptionInterface) {
+        } catch (ExceptionInterface $e) {
         }
 
         return $completionInput;
@@ -200,7 +186,7 @@ final class CompleteCommand extends Command
             }
 
             return $this->getApplication()->find($inputName);
-        } catch (CommandNotFoundException) {
+        } catch (CommandNotFoundException $e) {
         }
 
         return null;

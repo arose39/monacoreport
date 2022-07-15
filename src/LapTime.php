@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace MonacoReport;
 
@@ -38,9 +38,9 @@ class LapTime
         $finish = DateTime::createFromFormat('Y-m-d_H:i:s.u', $endDateTime);
         $startTimestamp = $start->getTimestamp() . '.' . $start->format('u');
         $finishTimestamp = $finish->getTimestamp() . '.' . $finish->format('u');
-        $resultTimestamp = round($finishTimestamp - $startTimestamp, 3);
-        $e = explode(".", $resultTimestamp);
-        $timeResult = gmdate("H:i:s", $e[0]) . '.' . $e[1];
+        $resultTimestamp = round((float)($finishTimestamp - $startTimestamp), 3);
+        [$RoughTime, $milliseconds] = explode(".", "$resultTimestamp");
+        $timeResult = gmdate("H:i:s", (int)$RoughTime) . '.' . $milliseconds;
 
         return $timeResult;
     }

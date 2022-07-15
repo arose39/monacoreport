@@ -1,17 +1,24 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace MonacoReport;
 
 use http\Exception\InvalidArgumentException;
+use MonacoReport\Formatters\FormatterInterface;
 use MonacoReport\RacersCollection;
+use MonacoReport\SortStrategies\SortStrategyASC;
+use MonacoReport\SortStrategies\SortStrategyDESC;
+use MonacoReport\SortStrategies\SortStrategyInterface;
 
 class Report
 {
     private RacersCollection $racersCollection;
+    private SortStrategyInterface $sortStrategy;
+    private FormatterInterface $formatter;
 
-    public function __construct(RacersCollection $racersCollection)
+    public function __construct(RacersCollection $racersCollection, FormatterInterface $formatter)
     {
         $this->racersCollection = $racersCollection;
+        $this->formatter = $formatter;
     }
 
     public function build(string $sortOrder)
@@ -25,40 +32,24 @@ class Report
             $i++;
         }
         if ($sortOrder == "ASC") {
-            usort($report, function ($a, $b) {
-                return ($a['lap_time'] < $b['lap_time']) ? -1 : 1;
-            });
+            $this->setSortStrategy(new SortStrategyASC());
         } elseif ($sortOrder == "DESC") {
-            usort($report, function ($a, $b) {
-                return ($a['lap_time'] > $b['lap_time']) ? -1 : 1;
-            });
+            $this->setSortStrategy(new SortStrategyDESC());
         } else {
-            throw new InvalidArgumentException("Uncorrect argument for sorting, use 'DESC' or 'ASC'");
+            throw new InvalidArgumentException("Incorrect argument for sorting, use 'DESC' or 'ASC'");
         }
 
-        return $report;
+        return $this->sortStrategy->execute($report);
     }
 
-    public function printHTML(string $sortOrder = "ASC")
+    public function print(string $sortOrder = "ASC")
     {
         $report = $this->build($sortOrder);
-        echo '<ol>';
-        $i = 0;
-        $reportItemsNumber = count($report);
-        while ($i != 15) {
-            echo "<li>" . $report[$i]['name'] . '      | ' . $report[$i]['team'] . '     | ' . $report[$i]['lap_time'] . "</li>";
-            $i++;
-        }
-        echo '<hr>';
-        while ($i != $reportItemsNumber) {
-            echo "<li>" . $report[$i]['name'] . '      | ' . $report[$i]['team'] . '     | ' . $report[$i]['lap_time'] . "</li>";
-            $i++;
-        }
-        echo '</ol>';
+        $this->formatter->format($report, $sortOrder);
     }
 
-    public function printConsole(string $sortOrder = "ASC")
+    private function setSortStrategy(SortStrategyInterface $sortStrategy)
     {
-        // Здесь будет реализация отрисовки для консольного интерфейса
+        $this->sortStrategy = $sortStrategy;
     }
 }

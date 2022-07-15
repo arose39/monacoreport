@@ -1,8 +1,6 @@
-<?php
-
+<?php declare(strict_types=1);
 
 namespace MonacoReport;
-
 
 class Racer
 {
@@ -24,29 +22,14 @@ class Racer
         return $this->abbreviation;
     }
 
-    public function setAbbreviation(string $abbreviation): void
-    {
-        $this->abbreviation = $abbreviation;
-    }
-
     public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName(string $name): void
-    {
-        $this->name = $name;
-    }
-
     public function getTeam(): string
     {
         return $this->team;
-    }
-
-    public function setTeam(string $team): void
-    {
-        $this->team = $team;
     }
 
     public function getLapTime(): string
@@ -62,9 +45,5 @@ class Racer
 
         return $readyLapTime;
     }
-
-    public function setLapTime(LapTime $lapTime): LapTime
-    {
-        $this->lapTime = $lapTime;
-    }
 }
+
