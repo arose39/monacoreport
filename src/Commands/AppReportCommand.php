@@ -88,10 +88,11 @@ class AppReportCommand extends Command
             $sortOrder = $input->getOption('sort_order');
             $report->print($sortOrder);
         }
+
         return self::SUCCESS;
     }
 
-    private function getRacerInfo($driver, $racersCollection)
+    private function getRacerInfo(string $driver, RacersCollection $racersCollection): array
     {
         $driverInfo = [];
         foreach ($racersCollection as $racer) {

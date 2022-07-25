@@ -1,8 +1,6 @@
 <?php declare(strict_types=1);
 
-
 namespace MonacoReport;
-
 
 class RaceInfoBuilder
 {
@@ -29,5 +27,4 @@ class RaceInfoBuilder
 
         return $racersRaceInfo;
     }
-
 }

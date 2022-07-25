@@ -2,7 +2,7 @@
 
 require_once realpath("vendor/autoload.php");
 
-use MonacoReport\Formatters\HTMLFormatter;
+use MonacoReport\Formatters\HtmlFormatter;
 use MonacoReport\Parsers\AbbreviationsParser;
 use MonacoReport\Parsers\LogParser;
 use MonacoReport\LapTime;
@@ -35,7 +35,7 @@ foreach ($racersRaceInfo as $racerRaceInfo) {
         )
     );
 }
-$formatter = new HTMLFormatter();
+$formatter = new HtmlFormatter();
 $report = new Report($racersCollection, $formatter);
 $report->print();
 

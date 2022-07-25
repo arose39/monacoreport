@@ -10,7 +10,7 @@ class LapTime
     private string $endDateTime;
     private string $lapTime;
 
-    public function __construct($startDateTime, $endDateTime)
+    public function __construct(string $startDateTime, string $endDateTime)
     {
         $this->startDateTime = $startDateTime;
         $this->endDateTime = $endDateTime;
