@@ -28,16 +28,14 @@ class AbbreviationsParser
     {
         if (!file_exists($path)) {
             throw new InvalidArgumentException("$path file is not exist");
-        } else {
-
-            $fp = fopen($path, 'r');
-            $data = [];
-            for ($i = 0; $fileString = fgets($fp); $i++) {
-                $data[$i] = $fileString;
-            }
-            fclose($fp);
-
-            return $data;
         }
+        $fp = fopen($path, 'r');
+        $data = [];
+        for ($i = 0; $fileString = fgets($fp); $i++) {
+            $data[$i] = $fileString;
+        }
+        fclose($fp);
+
+        return $data;
     }
 }

@@ -8,13 +8,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class ConsoleFormatter implements FormatterInterface
 {
-    private InputInterface $input;
-    private OutputInterface $output;
-
-    public function __construct(InputInterface $input, OutputInterface $output)
+    public function __construct(private InputInterface $input, private OutputInterface $output)
     {
-        $this->input = $input;
-        $this->output = $output;
     }
 
     public function format(array $report, string $sortOrder): void

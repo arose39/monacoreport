@@ -38,4 +38,3 @@ foreach ($racersRaceInfo as $racerRaceInfo) {
 $formatter = new HtmlFormatter();
 $report = new Report($racersCollection, $formatter);
 $report->print();
-
