@@ -1,4 +1,9 @@
-For run app write command docker-compose up in cmd.
+For run app write command composer update and docker-compose up in cmd.
+
+This app get 3 files (start log, end log, abbreviations description) from 
+report of qualification in Monaco 2018, and make consolidated report.
+
+App working as browser application and as console application.
 
 For run console app try to write next commands
 

@@ -14,7 +14,7 @@ services:
 
   php-fpm:
     build: phpdocker/php-fpm
-    working_dir: /application
+    working_dir: /monacoreport
     volumes:
       - '.:/monacoreport'
       - './phpdocker/php-fpm/php-ini-overrides.ini:/usr/local/etc/php/conf.d/99-overrides.ini'
