@@ -12,3 +12,5 @@ For run console app try to write next commands
 - php bin/console app:report --files resources --sort_order DESC
 - php bin/console app:report --files resources --driver "Sergey Sirotkin"(or choose another driver)
 - php bin/console app:report --driver "Sebastian Vettel" --files resources -s DESC
+
+There are unit test and code coverage report in project.
